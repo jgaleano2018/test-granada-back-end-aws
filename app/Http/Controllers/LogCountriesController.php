@@ -60,6 +60,7 @@ class LogCountriesController extends Controller
         //Convert array to json form...
         $countries_details_out = json_encode($countries_details_end);
         $logCountries->countries_details = $countries_details_out;
+        $logCountries->created_date = Carbon\Carbon::now();
                 
         $logCountries->save();
 

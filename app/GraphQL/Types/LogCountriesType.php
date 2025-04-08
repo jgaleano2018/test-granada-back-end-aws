@@ -36,7 +36,11 @@ class LogCountriesType extends GraphQLType
             'countries_details' => [
                 'type' => Type::nonNull(Type::string()),
                 'description' => 'The grape variety of the wine',
-            ]
+            ],
+            'created_date' => [
+                'type' => Type::nonNull(Type::string()),
+                'description' => 'The created date of log countries',
+            ],
         ];
     }
 }
