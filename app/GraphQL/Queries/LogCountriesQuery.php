@@ -2,7 +2,10 @@
 
 namespace App\GraphQL\Queries;
 
+use Closure;
 use App\Models\LogCountries;
+use Rebing\GraphQL\Support\Facades\GraphQL;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Query;
 
@@ -12,24 +15,22 @@ class LogCountriesQuery extends Query
         'name' => 'logCountries',
     ];
 
-    public function type()
+    public function type(): Type
     {
         return GraphQL::type('LogCountries');
     }
 
-    public function args()
+    public function args(): array
     {
         return [
             'id' => [
-                'name' => 'id',
-                'type' => Type::int(),
-                'rules' => ['required']
+                'type' => Type::id(),
             ],
         ];
     }
 
-    public function resolve($root, $args)
+    public function resolve($root, array $args, $context, ResolveInfo $resolveInfo, Closure $getSelectFields)
     {
-        return LogCountries::findOrFail($args['id']);
+        return $logCountries = LogCountries::find($args['id']);
     }
 }

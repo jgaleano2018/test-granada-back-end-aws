@@ -8,8 +8,7 @@ return [
         'prefix' => 'graphql',
 
         // The controller/method to use in GraphQL request.
-        // Also supported array syntax: `[\Rebing\GraphQL\GraphQLController::class, 'query']`
-        'controller' => Rebing\GraphQL\GraphQLController::class . '@query',
+        'controller' => \Rebing\GraphQL\GraphQLController::class . '@query',
 
         // Any middleware for the graphql route group
         // This middleware will apply to all schemas
@@ -35,67 +34,18 @@ return [
         'enable' => true,
     ],
 
-    // The schemas for query and/or mutation. It expects an array of schemas to provide
-    // both the 'query' fields and the 'mutation' fields.
-    //
-    // You can also provide a middleware that will only apply to the given schema
-    //
-    // Example:
-    //
-    //  'schemas' => [
-    //      'default' => [
-    //          'controller' => MyController::class . '@method',
-    //          'query' => [
-    //              App\GraphQL\Queries\UsersQuery::class,
-    //          ],
-    //          'mutation' => [
-    //
-    //          ]
-    //      ],
-    //      'user' => [
-    //          'query' => [
-    //              App\GraphQL\Queries\ProfileQuery::class,
-    //          ],
-    //          'mutation' => [
-    //
-    //          ],
-    //          'middleware' => ['auth'],
-    //      ],
-    //      'user/me' => [
-    //          'query' => [
-    //              App\GraphQL\Queries\MyProfileQuery::class,
-    //          ],
-    //          'mutation' => [
-    //
-    //          ],
-    //          'middleware' => ['auth'],
-    //      ],
-    //  ]
-    //
     'schemas' => [
         'default' => [
             'query' => [
-                'logCountries' => App\GraphQL\Queries\LogCountriesQuery::class,
-                'logsCountries' => App\GraphQL\Queries\LogsCountriesQuery::class,
-            ],
-            'mutation' => [
-                // ExampleMutation::class,
-            ],
-            // The types only available in this schema
-            'types' => [
-                'LogCountries' => App\GraphQL\Types\LogCountriesType::class,
-            ],
-
-            // Laravel HTTP middleware
-            'middleware' => null,
-
-            // Which HTTP methods to support; must be given in UPPERCASE!
+                    'logCountries' => \App\GraphQL\Queries\LogsCountriesQuery::class,
+                ],
+            'middleware' => [],
             'method' => ['GET', 'POST'],
-
             // An array of middlewares, overrides the global ones
             'execution_middleware' => null,
         ],
     ],
+
 
     // The global types available to all schemas.
     // You can then access it from the facade like this: GraphQL::type('user')
@@ -107,10 +57,13 @@ return [
     // ]
     //
     'types' => [
-        // ExampleType::class,
-        // ExampleRelationType::class,
-        // \Rebing\GraphQL\Support\UploadType::class,
+        'LogCountries' => App\GraphQL\Types\LogCountriesType::class,
     ],
+
+    // The types will be loaded on demand. Default is to load all types on each request
+    // Can increase performance on schemes with many types
+    // Presupposes the config type key to match the type class name property
+    'lazyload_types' => true,
 
     // This callable will be passed the Error object for each errors GraphQL catch.
     // The method should return an array representing the error.
@@ -119,7 +72,7 @@ return [
     //     'message' => '',
     //     'locations' => []
     // ]
-    'error_formatter' => [Rebing\GraphQL\GraphQL::class, 'formatError'],
+    'error_formatter' => [\Rebing\GraphQL\GraphQL::class, 'formatError'],
 
     /*
      * Custom Error Handling
@@ -128,7 +81,7 @@ return [
      *
      * The default handler will pass exceptions to laravel Error Handling mechanism
      */
-    'errors_handler' => [Rebing\GraphQL\GraphQL::class, 'handleErrors'],
+    'errors_handler' => [\Rebing\GraphQL\GraphQL::class, 'handleErrors'],
 
     /*
      * Options to limit the query complexity and depth. See the doc
@@ -145,13 +98,24 @@ return [
      * You can define your own pagination type.
      * Reference \Rebing\GraphQL\Support\PaginationType::class
      */
-    'pagination_type' => Rebing\GraphQL\Support\PaginationType::class,
+    'pagination_type' => \Rebing\GraphQL\Support\PaginationType::class,
 
     /*
      * You can define your own simple pagination type.
      * Reference \Rebing\GraphQL\Support\SimplePaginationType::class
      */
-    'simple_pagination_type' => Rebing\GraphQL\Support\SimplePaginationType::class,
+    'simple_pagination_type' => \Rebing\GraphQL\Support\SimplePaginationType::class,
+
+    /*
+     * Config for GraphiQL (see (https://github.com/graphql/graphiql).
+     */
+    'graphiql' => [
+        'prefix' => 'graphiql', // Do NOT use a leading slash
+        'controller' => \Rebing\GraphQL\GraphQLController::class . '@graphiql',
+        'middleware' => [],
+        'view' => 'graphql::graphiql',
+        'display' => env('ENABLE_GRAPHIQL', true),
+    ],
 
     /*
      * Overrides the default field resolver
@@ -209,15 +173,10 @@ return [
      * Execution middlewares
      */
     'execution_middleware' => [
-        Rebing\GraphQL\Support\ExecutionMiddleware\ValidateOperationParamsMiddleware::class,
+        \Rebing\GraphQL\Support\ExecutionMiddleware\ValidateOperationParamsMiddleware::class,
         // AutomaticPersistedQueriesMiddleware listed even if APQ is disabled, see the docs for the `'apq'` configuration
-        Rebing\GraphQL\Support\ExecutionMiddleware\AutomaticPersistedQueriesMiddleware::class,
-        Rebing\GraphQL\Support\ExecutionMiddleware\AddAuthUserContextValueMiddleware::class,
+        \Rebing\GraphQL\Support\ExecutionMiddleware\AutomaticPersistedQueriesMiddleware::class,
+        \Rebing\GraphQL\Support\ExecutionMiddleware\AddAuthUserContextValueMiddleware::class,
         // \Rebing\GraphQL\Support\ExecutionMiddleware\UnusedVariablesMiddleware::class,
     ],
-
-    /*
-     * Globally registered ResolverMiddleware
-     */
-    'resolver_middleware_append' => null,
 ];

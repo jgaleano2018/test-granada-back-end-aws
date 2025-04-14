@@ -1,10 +1,13 @@
 <?php
 
+//declare(strict_types=1);
+
 namespace App\GraphQL\Types;
 
 use App\Models\LogCountries;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Type as GraphQLType;
+use Rebing\GraphQL\Support\Facades\GraphQL;
 
 class LogCountriesType extends GraphQLType
 {
@@ -14,7 +17,7 @@ class LogCountriesType extends GraphQLType
         'model' => LogCountries::class
     ];
 
-    public function fields()
+    public function fields(): array
     {
         return [
             'id' => [
@@ -44,3 +47,5 @@ class LogCountriesType extends GraphQLType
         ];
     }
 }
+
+
