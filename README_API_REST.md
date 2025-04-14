@@ -9,6 +9,9 @@ This project is based on the use of Laravel 8 to provide REST API services and c
   - composer global require laravel/installer
   - php artisan serve
 
+# Install Database Postgres
+  - Ejecutar el script que adiciono a la entrega por chat para pruebas locales: //BackupDB
+
 # Database Configuration Parameters
 Access the .env file and modify the following parameters to connect to the local database:
   - DB_CONNECTION=pgsql
