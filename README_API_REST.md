@@ -1,4 +1,4 @@
-## Project test-granada-back-end
+# Project test-granada-back-end
 This project is based on the use of Laravel 8 to provide REST API services and connects to a PostgreSQL database.
 
 # Technology
